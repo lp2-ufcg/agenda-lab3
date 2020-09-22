@@ -95,7 +95,7 @@ public class InterfaceAgenda {
 		System.out.print("\nPosição na agenda> ");
 		int posicao = scanner.nextInt();
 		System.out.print("\nNome> ");
-		String nome = scanner.nextLine();
+		String nome = scanner.next();
 		agenda.cadastraContato(posicao, nome);
 	}
 
@@ -127,7 +127,7 @@ public class InterfaceAgenda {
 
 	private static void processaLinhaAgendaCSV(String[] campos, Agenda agenda) {
 		int posicao = Integer.parseInt(campos[0]);
-		String nome = campos[1];
+		String nome = campos[1].trim();
 		
 		agenda.cadastraContato(posicao, nome);
 	}
