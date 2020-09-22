@@ -3,7 +3,7 @@ package agenda;
 /**
  * Uma agenda que mantém uma lista de contatos com posições. Podem existir 100 contatos. 
  * 
- * @author nazarenoandrade
+ * @author nazareno
  *
  */
 public class Agenda {

@@ -1,7 +1,6 @@
 package agenda;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -22,8 +21,10 @@ public class InterfaceAgenda {
 			 * Essa é a maneira de lidar com possíveis erros por falta do arquivo. 
 			 */
 			carregaAgenda("agenda_inicial.csv", agenda);
+		} catch (FileNotFoundException e) {
+			System.err.println("Arquivo não encontrado: " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println("Erro: " + e.getMessage());
+			System.err.println("Erro lendo arquivo: " + e.getMessage());
 		}
 
 		Scanner scanner = new Scanner(System.in);
@@ -143,39 +144,14 @@ public class InterfaceAgenda {
 	/**
 	 * Lê uma agenda de um arquivo csv. 
 	 * 
-	 * @param arquivo O caminho para o arquivo.
+	 * @param arquivoContatos O caminho para o arquivo.
 	 * @param agenda A agenda que deve ser populada com os dados. 
 	 * @throws IOException Caso o arquivo não exista ou não possa ser lido.
 	 */
-	private static void carregaAgenda(String arquivo, Agenda agenda) throws IOException {
-		int carregados = 0;
-
-		try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
-			String linha;
-			while ((linha = br.readLine()) != null) {
-				carregados += 1;
-				if (carregados == 1) {
-					// pulamos a primeira linha, o cabeçalho
-					continue;
-				}
-				String[] campos = linha.split(",");
-				processaLinhaAgendaCSV(campos, agenda);
-			}
-		}
-
+	private static void carregaAgenda(String arquivoContatos, Agenda agenda) throws FileNotFoundException, IOException {
+		LeitorDeAgenda leitor = new LeitorDeAgenda();
+		
+		int carregados =  leitor.carregaContatos(arquivoContatos, agenda);
 		System.out.println("Carregamos " + carregados + " registros.");
-	}
-
-	/**
-	 * Coloca na agenda os dados de uma linha do arquivo de agenda inicial. 
-	 * 
-	 * @param campos As informações lidas do csv. 
-	 * @param agenda A agenda a manipular. 
-	 */
-	private static void processaLinhaAgendaCSV(String[] campos, Agenda agenda) {
-		int posicao = Integer.parseInt(campos[0]);
-		String nome = campos[1].trim();
-
-		agenda.cadastraContato(posicao, nome);
 	}
 }
