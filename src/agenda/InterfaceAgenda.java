@@ -1,5 +1,8 @@
 package agenda;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class InterfaceAgenda {
@@ -7,8 +10,14 @@ public class InterfaceAgenda {
 	public static void main(String[] args) {
 		Agenda agenda = new Agenda();
 		
-		Scanner scanner = new Scanner(System.in);
+		System.out.println("Carregando agenda inicial");
+		try {
+			carregaAgenda("agenda_inicial.csv", agenda);
+		} catch (IOException e) {
+			System.err.println("Erro: " + e.getMessage());
+		}
 		
+		Scanner scanner = new Scanner(System.in);
 		String escolha = "";
 		while(true) {			
 			escolha = menu(scanner);
@@ -17,6 +26,12 @@ public class InterfaceAgenda {
 
 	}
 
+	/**
+	 * Exibe o menu e captura a escolha do/a usuário/a.
+	 * 
+	 * @param scanner Para captura da opção do usuário. 
+	 * @return O comando escolhido.
+	 */
 	private static String menu(Scanner scanner) {
 		System.out.println(
 				"\n---\nMENU\n"
@@ -26,7 +41,7 @@ public class InterfaceAgenda {
 				+ "(S)air\n"
 				+ "\n"
 				+ "Opção> ");
-		return scanner.next();
+		return scanner.next().toUpperCase();
 	}
 	
 	private static void comando(String opcao, Agenda agenda, Scanner scanner) {
@@ -52,7 +67,7 @@ public class InterfaceAgenda {
 		}
 		
 	}
-
+ 
 	
 	private static void listaContatos(Agenda agenda) {
 		System.out.println("\nLista de contatos: ");
@@ -90,4 +105,30 @@ public class InterfaceAgenda {
 		System.exit(0);
 	}
 
+	
+	private static void carregaAgenda(String arquivo, Agenda agenda) throws IOException {
+		int carregados = 0; 
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+		    String linha;
+		    while ((linha = br.readLine()) != null) {
+		    	carregados += 1;
+		    	if(carregados == 1) {
+		    		// pulamos a primeira linha, o cabeçalho
+		    		continue; 
+		    	}
+		        String[] campos = linha.split(",");
+		        processaLinhaAgendaCSV(campos, agenda);
+		    }
+		}
+		
+		System.out.println("Carregamos " + carregados + " registros.");
+	}
+
+	private static void processaLinhaAgendaCSV(String[] campos, Agenda agenda) {
+		int posicao = Integer.parseInt(campos[0]);
+		String nome = campos[1];
+		
+		agenda.cadastraContato(posicao, nome);
+	}
 }
