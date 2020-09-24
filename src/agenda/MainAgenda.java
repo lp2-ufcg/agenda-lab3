@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * Interface linha de comando para manipular a agenda.
+ * Interface com menus texto para manipular uma agenda de contatos.
  * 
  * @author nazarenoandrade
  *
  */
-public class InterfaceAgenda {
+public class MainAgenda {
 
 	public static void main(String[] args) {
 		Agenda agenda = new Agenda();
